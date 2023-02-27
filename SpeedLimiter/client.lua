@@ -9,20 +9,20 @@ Citizen.CreateThread( function()
 		else
 			speed = math.floor(Config.maxSpeed / 2.23694)
 		end
-		if vehicleClass ~= 16 then
-			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), speed)
-		else
-			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
-		end
-		if IsEntityInAir(vehicle) then
-			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
-		else
-			if vehicleClass ~= 16 then
-			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), speed)
-			end
-		end
+		
+		setSpeed(speed)
 	end
 end)
+
+function setSpeed(maxSpeed)
+	if vehicleClass ~= 16 then
+		if not IsEntityInAir(vehicle) then
+			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), maxSpeed)
+		end
+	else
+		SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
+	end
+end
 
 -- VEHICLE CLASSES
 -- id = 0 --compacts

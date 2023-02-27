@@ -17,7 +17,9 @@ Citizen.CreateThread( function()
 		if IsEntityInAir(vehicle) then
 			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
 		else
+			if vehicleClass ~= 16 then
 			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), speed)
+			end
 		end
 	end
 end)

@@ -2,21 +2,22 @@ Citizen.CreateThread( function()
 	while true do 
 		Citizen.Wait( 100 )   
 		local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-		local speed = GetEntitySpeed(vehicle)
-		
-		if Config.kmh then
-			speed = speed * 3.6
-		else
-			speed = speed * 2.23694
-		end
 		local vehicleClass = GetVehicleClass(vehicle)
+		local speed = 0
+		if Config.kmh then
+			speed = math.floor(Config.maxSpeed / 3.6)
+		else
+			speed = math.floor(Config.maxSpeed / 2.23694)
+		end
 		if vehicleClass ~= 16 then
-			if math.floor(speed) == 250 then
-				cruise = GetEntitySpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false))
-				SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), cruise)
-			end
+			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), speed)
 		else
 			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
+		end
+		if IsEntityInAir(vehicle) then
+			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
+		else
+			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), speed)
 		end
 	end
 end)

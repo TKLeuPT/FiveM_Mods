@@ -1,29 +1,35 @@
 Citizen.CreateThread( function()
 	while true do 
-		Citizen.Wait( 100 )   
-		local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
-		if vehicle == nil then
+		Citizen.Wait( 100 )
+		while not IsPedInAnyVehicle(PlayerPedId(), false) 
+		do
 			Citizen.Wait(5000)
 		end
-		local vehicleClass = GetVehicleClass(vehicle)
-		local speed = 0
-		if Config.kmh then
-			speed = math.floor(Config.maxSpeed / 3.6)
-		else
-			speed = math.floor(Config.maxSpeed / 2.23694)
-		end
 		
-		setSpeed(speed,vehicle)
+		local vehicle = GetVehiclePedIsIn(GetPlayerPed(-1), false)
+		
+		if vehicle ~= nil then
+			setSpeed(Config.maxSpeed,vehicle)
+		end
 	end
 end)
 
-function setSpeed(maxSpeed,vehicle)
-	if vehicleClass ~= 16 then
-		if not IsEntityInAir(vehicle) then
-			SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), maxSpeed)
-		end
+function setSpeed(speed,vehicle)
+	local vehicleDefaultSpeed = GetVehicleEstimatedMaxSpeed(vehicle)
+	local vehicleClass = GetVehicleClass(vehicle)
+
+	if Config.kmh then
+		speed = speed / 3.6
 	else
-		SetEntityMaxSpeed(GetVehiclePedIsIn(GetPlayerPed(-1), false), GetVehicleMaxSpeed(GetEntityModel(vehicle)))
+		speed = speed / 2.23694
+	end
+
+	SetVehicleMaxSpeed(vehicle, vehicleDefaultSpeed)
+
+	if (vehicleClass ~= 16) or  (vehicleClass ~= 15) then
+		if vehicleDefaultSpeed > speed then
+			SetVehicleMaxSpeed(vehicle, speed)
+		end
 	end
 end
 
